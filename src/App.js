@@ -1,7 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
-import data from "../data/practice_data.json"
+import data from "./data/practice_data.json"
 import CurrentStats from "./components/CurrentStats"
+// import { validInstruction } from './helpers/validInstruction';
+// import { newLocation } from './helpers/newLocation';
+// import useInterval from "./helpers/useInterval"
 
 
 function App() {
@@ -9,55 +12,51 @@ function App() {
   const [roombaLocation, setRoombaLocation] = useState(
  data.initialRoombaLocation
   )
+
+  // let roombaLocation = data.initialRoombaLocation
   
   const roomDimensions = data.roomDimensions
 
   const dirtLocations = data.dirtLocations
 
   const drivingInstructions = data.drivingInstructions
+  
+  const [stepCount, setStepCount] = useState(0)
 
-  let wallHits = 0
-  let stepCount = 0
-  let dirtCount = 0
-  let displayCount = stepCount + 1
+  let newRoombaLocation
+  const [ticker, setTicker] = useState(0)
 
-  //loop will start via onClick from button
-  //need a loop that iterates over the driving instructions
-  //while stepCount is <=len(drivingInstructions):
-  //function(drivingInstruction[stepCount])
-    //for each direction:
-      //if it is "N":
-        //increment roombaLocation[1]+1
-      //if it is "S":
-        //decrement roombaLocation[1]-1
-      //if it is "E":
-        //increment roombaLocation[0]+1
-      //if it is "W":
-        //decrement roombaLocation[0]-1
-      //returns new roombaLocation
+  const [driveStarted, setDriveStarted] = useState(false)
+  const [wallHits, setWallHits] = useState(0)
+  const [dirtCount, setDirtCount] = useState(0)
 
-      //need to check that this is a valid roombaLocation. write a function for this.
-      //function(new roombaLocation){
-          //if(roombaLocation[0] >= 1 && roombaLocation[0] <=roomDimensions[0] && roombaLocation[1] >= 1 && roombaLocation[1] <= roomDimensions[1]){
-              //setRoombaLocation(new roombaLocation)
-          //}
-          //else{
-              //increment wallHits count
-              //break loop
-          //}
-      //}
-        
-    //if roombaLocation === one of the dirt locations:
-      //increment dirtCount +=1
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     setStepCount(stepCount + 1)
+  //   }, 4000);
+  //   return () => clearTimeout(timeout)
+  // }, [roombaLocation])
+  
+  // pass that direction in as a parameter to a move function that sets the location state of the roomba, checks for dirt, checks for wall hits
+  
+  // need to be able to isolate the incrementing of the direction array with an on click
+  const nextDirection = (e) => {
+    e.preventDefault()
+    setDriveStarted(true)
+    setTicker(ticker + 1)
+    console.log(`drive: ${driveStarted}, ticker: ${ticker}`)
+  }
 
-    //incrememnt stepCount
+  // console.log(moveRoomba(ticker, roombaLocation, drivingInstructions, roomDimensions, driveStarted, setDriveStarted))
+  
 
   return (
     <div className="App">
       <h1>Roomba Challenge- accepted!</h1>
-      <button>Run Roomba!</button>
+      <button onClick={nextDirection}>Run Roomba!</button>
+      {/* <button onClick={() => setDriveStarted(false)}>stop Roomba</button> */}
       <div>
-        <CurrentStats displayCount={displayCount} roombaLocation={roombaLocation} dirtCount={dirtCount} wallHits={wallHits}/>
+        <CurrentStats roombaLocation={roombaLocation} instructions={drivingInstructions} dirtCount={dirtCount} wallHits={wallHits} ticker={ticker} dimensions={roomDimensions} setRoombaLocation={setRoombaLocation} setWallHits={setWallHits} dirtLocations={dirtLocations} setDirtCount={setDirtCount}/>
         
       </div>
     </div>
