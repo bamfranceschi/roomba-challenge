@@ -1,38 +1,10 @@
-import React, {useEffect, useState} from "react"
-import {validInstruction} from "../helpers/validInstruction"
-import {newLocation} from "../helpers/newLocation"
-import { validMove } from "../helpers/validMove"
-import { dirtFinder } from "../helpers/dirtFinder"
+import React from "react"
 
-function CurrentStats({roombaLocation, dirtCount, wallHits, ticker, instructions, dimensions, setRoombaLocation, setWallHits, setDirtCount, dirtLocations}){
-    useEffect(() => {
-        //call pure functions here
-        let instruction = validInstruction(ticker, instructions)
-        
-        if (instruction){
-            let nextLocation = newLocation(roombaLocation, instruction)
-            
-            if(validMove(nextLocation, dimensions)){
-                setRoombaLocation(nextLocation)
 
-                if(dirtFinder(roombaLocation, dirtLocations)){
-                    setDirtCount(dirtCount + 1)
-                    
-                }
-
-            } else {
-                setWallHits(wallHits + 1)
-            }
-        }
-
-        if(displayCount <= instructions.length){
-
-            setDisplayCount(displayCount + 1)
-        }
-            
-    }, [ticker])
-
-    const [displayCount, setDisplayCount] = useState(ticker + 1)
+function CurrentStats({roombaLocation, instructions, ticker, dirtCount, wallHits}){
+    
+   
+    const displayCount = ticker + 1;
 
     return(
         <div>
