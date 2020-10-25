@@ -7,7 +7,6 @@ function CurrentStats({
   ticker,
   dirtCount,
   wallHits,
-  driveStart,
 }) {
   const displayCount = ticker + 2;
 
