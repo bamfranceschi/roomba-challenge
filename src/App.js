@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import data from "./data/practice_data.json";
 import CurrentStats from "./components/CurrentStats";
 import { validInstruction } from "./helpers/validInstruction";
 import { newLocation } from "./helpers/newLocation";
@@ -12,26 +11,27 @@ function App() {
   const [jsonUpload, setJsonUpload] = useState({
     roomDimensions: [],
     initialRoombaLocation: [],
-    dirtLocations: [],
+    dirtLocations: [[]],
     drivingInstructions: [],
   });
-  console.log(jsonUpload.roomDimensions);
-  const [roombaLocation, setRoombaLocation] = useState(
-    jsonUpload.initialRoombaLocation
-  );
+
   const roomDimensions = jsonUpload.roomDimensions;
   const dirtLocations = jsonUpload.dirtLocations;
+  console.log(dirtLocations);
   const drivingInstructions = jsonUpload.drivingInstructions;
 
-  const [ticker, setTicker] = useState(0);
+  //starting ticker at -1 to account for it being used to traverse the directions array, and traversal obviously starts at position zero.
+  const [ticker, setTicker] = useState(-1);
+  console.log(ticker);
   const [wallHits, setWallHits] = useState(0);
   const [dirtCount, setDirtCount] = useState(0);
   const [driveStart, setDriveStart] = useState(false);
-  // const displayCount = ticker + 1;
+  const [uploadSuccess, setUploadSuccess] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (ticker <= drivingInstructions.length - 1 && driveStart) {
+      // subtracting 2 from the length of instructions array to make sure the ticker does not continue beyond array, accounting for its starting -1 value.
+      if (ticker <= drivingInstructions.length - 2 && driveStart) {
         setTicker(ticker + 1);
       }
     }, 1000);
@@ -44,12 +44,18 @@ function App() {
     let instruction = validInstruction(ticker, drivingInstructions);
 
     if (instruction) {
-      let nextLocation = newLocation(roombaLocation, instruction);
+      let nextLocation = newLocation(
+        jsonUpload.initialRoombaLocation,
+        instruction
+      );
 
       if (validMove(nextLocation, roomDimensions)) {
-        setRoombaLocation(nextLocation);
+        setJsonUpload({
+          ...jsonUpload,
+          initialRoombaLocation: nextLocation,
+        });
 
-        if (dirtFinder(roombaLocation, dirtLocations)) {
+        if (dirtFinder(jsonUpload.initialRoombaLocation, dirtLocations)) {
           setDirtCount(dirtCount + 1);
         }
       } else {
@@ -58,7 +64,7 @@ function App() {
     }
   }, [ticker]);
 
-  const nextDirection = (e) => {
+  const drive = (e) => {
     e.preventDefault();
     setDriveStart(!driveStart);
   };
@@ -66,20 +72,26 @@ function App() {
   return (
     <div className="App">
       <h1>Roomba Challenge- accepted!</h1>
-      <Uploader jsonUpload={jsonUpload} setJsonUpload={setJsonUpload} />
+      <Uploader
+        setJsonUpload={setJsonUpload}
+        uploadSuccess={uploadSuccess}
+        setUploadSuccess={setUploadSuccess}
+      />
       {driveStart === false ? (
-        <button onClick={nextDirection}>Run Roomba!</button>
+        <button onClick={drive}>Run Roomba!</button>
       ) : (
-        <button onClick={nextDirection}>Pause Roomba!</button>
+        <button onClick={drive}>Pause Roomba!</button>
       )}
 
       <div>
         <CurrentStats
-          roombaLocation={roombaLocation}
+          uploadSuccess={uploadSuccess}
+          jsonUpload={jsonUpload}
           instructions={drivingInstructions}
           ticker={ticker}
           dirtCount={dirtCount}
           wallHits={wallHits}
+          driveStart={driveStart}
         />
       </div>
     </div>

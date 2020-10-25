@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
-import styled from "styled-components";
+// import styled from "styled-components";
 
 const baseStyle = {
   flex: 1,
@@ -30,39 +30,9 @@ const rejectStyle = {
   borderColor: "#ff1744",
 };
 
-const thumbsContainer = {
-  display: "flex",
-  flexDirection: "row",
-  flexWrap: "wrap",
-  marginTop: 16,
-};
-
-const thumb = {
-  display: "inline-flex",
-  borderRadius: 2,
-  border: "1px solid #eaeaea",
-  marginBottom: 8,
-  marginRight: 8,
-  width: 100,
-  height: 100,
-  padding: 4,
-  boxSizing: "border-box",
-};
-
-const thumbInner = {
-  display: "flex",
-  minWidth: 0,
-  overflow: "hidden",
-};
-
-const img = {
-  display: "block",
-  width: "auto",
-  height: "100%",
-};
-
-function Uploader({ setJsonUpload }) {
+function Uploader({ setJsonUpload, uploadSuccess, setUploadSuccess }) {
   const [fileUpload, setFileUpload] = useState([]);
+  const [uploadFailure, setUploadFailure] = useState(false);
 
   const onDrop = useCallback(
     (acceptedFiles) => {
@@ -70,10 +40,11 @@ function Uploader({ setJsonUpload }) {
         const reader = new FileReader();
 
         reader.onabort = () => console.log("file reading was aborted");
-        reader.onerror = () => console.log("file reading has failed");
+        reader.onerror = () => setUploadFailure(false);
         reader.onload = () => {
           const fileData = JSON.parse(reader.result);
           setJsonUpload(fileData);
+          setUploadSuccess(true);
         };
         reader.readAsText(file);
       });
@@ -130,18 +101,12 @@ function Uploader({ setJsonUpload }) {
     </li>
   ));
 
-  const preview = () => (
-    <div style={thumb} key={fileUpload.name}>
-      <div style={thumbInner}>
-        <img src={fileUpload.preview} style={img} alt="file preview" />
-      </div>
-    </div>
-  );
-
   useEffect(
     () => () => {
-      // Make sure to revoke the data uris to avoid memory leaks
+      // revoke the data uris to avoid memory leaks
       fileUpload.forEach((f) => URL.revokeObjectURL(f.preview));
+      setUploadSuccess(false);
+      setUploadFailure(false);
     },
     [fileUpload]
   );
@@ -149,21 +114,26 @@ function Uploader({ setJsonUpload }) {
   return (
     <div {...getRootProps}>
       <input {...getInputProps({ style })} />
-      {isDragActive ? (
-        <p>Drop file here...</p>
-      ) : (
+
+      <p>Only JSON files, please, and max one per upload.</p>
+
+      {uploadSuccess === true ? (
         <div>
-          <p>Drag 'n' drop a file here, or click to select a file</p>
-          <p>Only JSON files, please, and max one per upload.</p>
+          <p>Successful upload</p> <h4>Accepted file</h4>
+          <ul>{acceptedFileItem}</ul>
         </div>
+      ) : (
+        <> </>
       )}
-      <aside style={thumbsContainer}>{preview}</aside>
-      <aside>
-        <h4>Accepted files</h4>
-        <ul>{acceptedFileItem}</ul>
-        <h4>Rejected files</h4>
-        <ul>{rejectedFileItem}</ul>
-      </aside>
+      {uploadFailure ? (
+        <div>
+          <p>Upload unsuccessful</p>
+          <h4>Rejected file</h4>
+          <ul>{rejectedFileItem}</ul>
+        </div>
+      ) : (
+        <> </>
+      )}
     </div>
   );
 }
