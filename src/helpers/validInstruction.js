@@ -9,3 +9,5 @@ export function validInstruction(ticker, instructions) {
     return undefined;
   }
 }
+
+// module.exports = validInstruction;

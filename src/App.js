@@ -6,6 +6,13 @@ import { newLocation } from "./helpers/newLocation";
 import { validMove } from "./helpers/validMove";
 import { dirtFinder } from "./helpers/dirtFinder";
 import Uploader from "./components/Uploader";
+import styled from "styled-components";
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 function App() {
   const [jsonUpload, setJsonUpload] = useState({
@@ -17,12 +24,10 @@ function App() {
 
   const roomDimensions = jsonUpload.roomDimensions;
   const dirtLocations = jsonUpload.dirtLocations;
-  console.log(dirtLocations);
   const drivingInstructions = jsonUpload.drivingInstructions;
 
   //starting ticker at -1 to account for it being used to traverse the directions array, and traversal obviously starts at position zero.
   const [ticker, setTicker] = useState(-1);
-  console.log(ticker);
   const [wallHits, setWallHits] = useState(0);
   const [dirtCount, setDirtCount] = useState(0);
   const [driveStart, setDriveStart] = useState(false);
@@ -70,8 +75,8 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h1>Roomba Challenge- accepted!</h1>
+    <Container>
+      <h1>Roomba Challenge</h1>
       <Uploader
         setJsonUpload={setJsonUpload}
         uploadSuccess={uploadSuccess}
@@ -94,7 +99,7 @@ function App() {
           driveStart={driveStart}
         />
       </div>
-    </div>
+    </Container>
   );
 }
 

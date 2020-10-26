@@ -6,6 +6,10 @@ export function dirtFinder(location, dirtLocations) {
   for (let dirtLoc of dirtLocations) {
     if (dirtLoc[0] === location[0] && dirtLoc[1] === location[1]) {
       return true;
+    } else {
+      return false;
     }
   }
 }
+
+// module.exports = dirtFinder;

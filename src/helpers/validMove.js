@@ -14,3 +14,5 @@ export function validMove(location, dimensions) {
     return false;
   }
 }
+
+// module.exports = validMove;

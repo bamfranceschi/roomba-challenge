@@ -1,21 +1,16 @@
 import React, { useCallback, useState, useEffect, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
-// import styled from "styled-components";
+import styled from "styled-components";
 
 const baseStyle = {
-  flex: 1,
   display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
+  justifyContent: "center",
+  marginLeft: "30px",
   padding: "20px",
-  borderWidth: 2,
-  borderRadius: 2,
   borderColor: "#eeeeee",
+  border: "2px",
   borderStyle: "dashed",
-  backgroundColor: "#fafafa",
   color: "#bdbdbd",
-  outline: "none",
-  transition: "border .24s ease-in-out",
 };
 
 const activeStyle = {
@@ -30,6 +25,20 @@ const rejectStyle = {
   borderColor: "#ff1744",
 };
 
+const UploadDisplay = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const FileDisplay = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+`;
+
 function Uploader({ setJsonUpload, uploadSuccess, setUploadSuccess }) {
   const [fileUpload, setFileUpload] = useState([]);
   const [uploadFailure, setUploadFailure] = useState(false);
@@ -40,7 +49,7 @@ function Uploader({ setJsonUpload, uploadSuccess, setUploadSuccess }) {
         const reader = new FileReader();
 
         reader.onabort = () => console.log("file reading was aborted");
-        reader.onerror = () => setUploadFailure(false);
+        reader.onerror = () => setUploadFailure(true);
         reader.onload = () => {
           const fileData = JSON.parse(reader.result);
           setJsonUpload(fileData);
@@ -118,19 +127,22 @@ function Uploader({ setJsonUpload, uploadSuccess, setUploadSuccess }) {
       <p>Only JSON files, please, and max one per upload.</p>
 
       {uploadSuccess === true ? (
-        <div>
-          <p>Successful upload</p> <h4>Accepted file</h4>
-          <ul>{acceptedFileItem}</ul>
-        </div>
+        <UploadDisplay>
+          <h3>Successful upload!</h3>
+          <FileDisplay>
+            <h4>Accepted file</h4>
+            <ul>{acceptedFileItem}</ul>
+          </FileDisplay>
+        </UploadDisplay>
       ) : (
         <> </>
       )}
       {uploadFailure ? (
-        <div>
-          <p>Upload unsuccessful</p>
+        <UploadDisplay>
+          <h3>Upload unsuccessful</h3>
           <h4>Rejected file</h4>
           <ul>{rejectedFileItem}</ul>
-        </div>
+        </UploadDisplay>
       ) : (
         <> </>
       )}
