@@ -25,6 +25,13 @@ Driving instructions: An array consisting of "N" "S" "E" or "W" elements that se
 
 ## Available Scripts
 
+### `yarn install`
+
+This project uses the following libraries:
+ - react-dropzone
+ - styled-components
+ - jest
+
 ### `yarn start`
 
 Runs the app in the development mode.<br />
@@ -38,10 +45,5 @@ Project uses Jest for testing.
 ### `yarn build`
 
 Builds the app for production to the `build` folder.<br />
-
-This project uses the following libraries:
- - react-dropzone
- - styled-components
- - jest
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
