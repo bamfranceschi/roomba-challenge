@@ -2,7 +2,7 @@
 //inputs: current location, given instruction
 //outputs: new location
 
-export function newLocation(location, instruction) {
+function newLocation(location, instruction) {
   let x = location[0];
   let y = location[1];
 
@@ -24,4 +24,4 @@ export function newLocation(location, instruction) {
   }
 }
 
-// module.exports = newLocation;
+module.exports = newLocation;

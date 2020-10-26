@@ -2,7 +2,7 @@
 //inputs: new location, room dimension
 //output: boolean if move is valid
 
-export function validMove(location, dimensions) {
+function validMove(location, dimensions) {
   if (
     location[0] >= 0 &&
     location[0] <= dimensions[0] &&
@@ -15,4 +15,4 @@ export function validMove(location, dimensions) {
   }
 }
 
-// module.exports = validMove;
+module.exports = validMove;

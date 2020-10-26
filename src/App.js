@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import CurrentStats from "./components/CurrentStats";
-import { validInstruction } from "./helpers/validInstruction";
-import { newLocation } from "./helpers/newLocation";
-import { validMove } from "./helpers/validMove";
-import { dirtFinder } from "./helpers/dirtFinder";
+import validInstruction from "./helpers/validInstruction";
+import newLocation from "./helpers/newLocation";
+import validMove from "./helpers/validMove";
+import dirtFinder from "./helpers/dirtFinder";
 import Uploader from "./components/Uploader";
 import styled from "styled-components";
 
